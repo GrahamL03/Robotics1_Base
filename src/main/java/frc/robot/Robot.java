@@ -24,18 +24,20 @@ public class Robot extends TimedRobot {
   String helloString = new String("Hello CC");
   String myName = new String("Graham Long");
   Timer myTimer = new Timer();
-  DigitalOutput userLED = new DigitalOutput(0);
-  DigitalInput userButton = new DigitalInput(1);
+  DigitalOutput userLED = new DigitalOutput(1);
+  DigitalInput userButton = new DigitalInput(0);
+  Timer ledTimer = new Timer();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    System.out.println(helloString);
-    System.out.println(helloString.toUpperCase());
-    System.out.println(helloString.toLowerCase());
-    System.out.println(myName);
+    //System.out.println(helloString);
+    //System.out.println(helloString.toUpperCase());
+    //System.out.println(helloString.toLowerCase());
+    //System.out.println(myName);
     myTimer.reset();
   }
 
@@ -67,6 +69,8 @@ public class Robot extends TimedRobot {
     myTimer.reset();
     myTimer.start();
     userLED.set(false);
+    ledTimer.stop();
+    ledTimer.reset();
   }
 
   /** This function is called periodically during autonomous. */
@@ -78,9 +82,13 @@ public class Robot extends TimedRobot {
     }
   if(userButton.get()){
     userLED.set(true);
-  } else {
-    userLED.set(false);
-  }
+    ledTimer.reset();
+    ledTimer.start();   
+    }
+    if(ledTimer.get() > 6.0){
+      userLED.set(false);
+      ledTimer.stop();
+    }
   }
 
   /** This function is called once when teleop is enabled. */
