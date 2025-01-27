@@ -80,10 +80,12 @@ public class Robot extends TimedRobot {
       System.out.println("Autonomous Running");
       myTimer.restart();
     }
-  if(userButton.get()){
-    userLED.set(true);
-    ledTimer.reset();
-    ledTimer.start();   
+    if( userLED.get() == false){
+        if(userButton.get()){
+          userLED.set(true);
+          ledTimer.reset();
+          ledTimer.start();   
+    }  
     }
     if(ledTimer.get() > 6.0){
       userLED.set(false);
