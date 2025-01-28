@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
   DigitalOutput userLED = new DigitalOutput(1);
   DigitalInput userButton = new DigitalInput(0);
   Timer ledTimer = new Timer();
+  Boolean userButtonWaitRelease;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -80,17 +81,23 @@ public class Robot extends TimedRobot {
       System.out.println("Autonomous Running");
       myTimer.restart();
     }
-    if( userLED.get() == false){
+    if(userButtonWaitRelease == false){
         if(userButton.get()){
           userLED.set(true);
           ledTimer.reset();
-          ledTimer.start();   
-    }  
+          ledTimer.start(); 
+          userButtonWaitRelease = true;  
     }
     if(ledTimer.get() > 6.0){
       userLED.set(false);
       ledTimer.stop();
     }
+    if(userButton.get()){
+    if(userButton.get() == false){
+      userButtonWaitRelease = false;
+    }
+  }
+  }
   }
 
   /** This function is called once when teleop is enabled. */
