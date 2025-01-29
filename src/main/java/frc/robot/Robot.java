@@ -21,8 +21,6 @@ public class Robot extends TimedRobot {
 
   //This is a comment
 
-  String helloString = new String("Hello CC");
-  String myName = new String("Graham Long");
   Timer myTimer = new Timer();
   DigitalOutput userLED = new DigitalOutput(1);
   DigitalInput userButton = new DigitalInput(0);
@@ -106,6 +104,7 @@ public class Robot extends TimedRobot {
     myTimer.stop();
     myTimer.reset();
     myTimer.start();
+    userLED.set(true);
   }
 
   /** This function is called periodically during operator control. */
@@ -114,6 +113,16 @@ public class Robot extends TimedRobot {
     if(myTimer.get() >= 5.0){
       System.out.println("Teleop Running");
       myTimer.restart();
+    }
+    if (userButton.get()){
+      userLED.set(false);
+      ledTimer.stop();
+      ledTimer.reset();
+      ledTimer.start();
+    }
+    if(ledTimer.get() > 10.0){
+      userLED.set(true);
+      ledTimer.stop();
     }
   }
 
