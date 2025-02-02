@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.xrp.XRPMotor;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,11 +22,13 @@ public class Robot extends TimedRobot {
 
   //This is a comment
 
-  Timer myTimer = new Timer();
   DigitalOutput userLED = new DigitalOutput(1);
   DigitalInput userButton = new DigitalInput(0);
   Timer ledTimer = new Timer();
-  Boolean userButtonWaitRelease;
+  Boolean userButtonWaitRelease = false;   
+
+  XRPMotor leftMotor = new XRPMotor(0);
+  XRPMotor rightMotor = new XRPMotor(1);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,11 +36,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    //System.out.println(helloString);
-    //System.out.println(helloString.toUpperCase());
-    //System.out.println(helloString.toLowerCase());
-    //System.out.println(myName);
-    myTimer.reset();
   }
 
   /**
@@ -64,9 +62,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    myTimer.stop();
-    myTimer.reset();
-    myTimer.start();
     userLED.set(false);
     ledTimer.stop();
     ledTimer.reset();
@@ -75,10 +70,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(myTimer.get() >= 10.0){
-      System.out.println("Autonomous Running");
-      myTimer.restart();
-    }
     if(userButtonWaitRelease == false){
         if(userButton.get()){
           userLED.set(true);
@@ -93,70 +84,54 @@ public class Robot extends TimedRobot {
     if(userButton.get()){
     if(userButton.get() == false){
       userButtonWaitRelease = false;
+      }
     }
-  }
-  }
+    }
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    myTimer.stop();
-    myTimer.reset();
-    myTimer.start();
+    ledTimer.stop();
+    ledTimer.reset();
     userLED.set(true);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(myTimer.get() >= 5.0){
-      System.out.println("Teleop Running");
-      myTimer.restart();
-    }
-    if (userButton.get()){
+    if (userButtonWaitRelease == false && userButton.get()){
       userLED.set(false);
-      ledTimer.stop();
       ledTimer.reset();
       ledTimer.start();
+      userButtonWaitRelease = true;
     }
     if(ledTimer.get() > 10.0){
       userLED.set(true);
       ledTimer.stop();
+      userButtonWaitRelease = false;
     }
   }
 
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    myTimer.stop();
-    myTimer.reset();
-    myTimer.start();
   }
 
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    if(myTimer.get() >= 10.0){
-      System.out.println("Disabled Running");
-      myTimer.restart();
-    }
+
   }
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    myTimer.stop();
-    myTimer.reset();
-    myTimer.start();
-  }
+    }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    if(myTimer.get() >= 15.0){
-      System.out.println("Test Running");
-      myTimer.restart();
-    }
+    
   }
 }
